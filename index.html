@@ -1,691 +1,546 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1"
+  />
   <title>FreeComfortLab – 프리 컨버터 실험실</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="File → Comfort, Comfort → Money. 프리 컨버터 실험실 – 파일을 편안함과 수익으로 바꾸는 실험실형 웹 서비스.">
+  <meta
+    name="description"
+    content="파일이 편안해지는 순간, 반복 노동을 수익으로 바꾸는 프리 컨버터 실험실."
+  />
+
+  <!-- 기본 폰트 -->
   <style>
     :root {
-      --bg: #020617;
-      --bg-soft: #020617;
-      --panel: #020617;
-      --panel-soft: #020617;
-      --primary: #60a5fa;
-      --primary-soft: rgba(96,165,250,0.18);
-      --accent: #a855f7;
-      --accent-soft: rgba(168,85,247,0.14);
-      --text-main: #e5e7eb;
-      --text-soft: #9ca3af;
-      --text-softer: #6b7280;
-      --border-subtle: #1f2937;
-      --radius-xl: 24px;
-      --radius-full: 999px;
-      --shadow-soft: 0 22px 60px rgba(15,23,42,0.85);
-      --shadow-chip: 0 14px 36px rgba(15,23,42,0.9);
-      --blur-strong: blur(52px);
-      --transition-fast: 160ms ease-out;
+      --bg-dark: #050816;
+      --bg-panel: #0b1020;
+      --bg-chip: #111729;
+      --accent: #4c7dff;
+      --accent-soft: rgba(76, 125, 255, 0.25);
+      --accent-2: #ffb347;
+      --text-main: #e5ecff;
+      --text-sub: #9aa4c6;
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.7);
     }
 
     * {
       box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 40%, #000 100%);
+        sans-serif;
+      background: radial-gradient(circle at top, #222c4f 0, #050816 50%, #01020a 100%);
       color: var(--text-main);
       display: flex;
+      align-items: stretch;
       justify-content: center;
-      padding: 32px 16px 40px;
     }
 
-    .shell {
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
       width: 100%;
-      max-width: 1120px;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.08), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(129,140,248,0.14), transparent 55%),
-                  rgba(15,23,42,0.96);
-      border-radius: 32px;
-      border: 1px solid rgba(148,163,184,0.15);
-      box-shadow: var(--shadow-soft);
-      padding: 20px 20px 28px;
-      position: relative;
-      overflow: hidden;
+      max-width: 1200px;
+      padding: 32px 20px 40px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
-    .shell::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 10% 0%, rgba(56,189,248,0.18), transparent 65%),
-        radial-gradient(circle at 90% 100%, rgba(168,85,247,0.22), transparent 60%);
-      opacity: 0.35;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
+    /* 헤더 */
 
-    .shell-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Top bar */
-    .topbar {
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 4px 4px 12px;
-      border-bottom: 1px solid rgba(15,23,42,0.7);
-      margin-bottom: 16px;
     }
 
-    .brand {
+    .logo-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
 
-    .brand-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 10px;
-      background:
-        conic-gradient(from 210deg, #38bdf8, #6366f1, #a855f7, #38bdf8);
-      box-shadow: 0 0 0 1px rgba(15,23,42,0.9),
-                  0 16px 40px rgba(15,23,42,1);
+    .logo-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #78e3ff, #3150ff);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #e5e7eb;
-      font-size: 14px;
       font-weight: 800;
+      color: #050816;
+      letter-spacing: 0.05em;
     }
 
-    .brand-text-main {
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #e5e7eb;
+    .logo-text-main {
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    .brand-text-sub {
+    .logo-text-sub {
       font-size: 11px;
-      color: var(--text-softer);
+      color: var(--text-sub);
     }
 
-    .top-right {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 12px;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-sub);
     }
 
-    .badge-beta {
+    .beta-chip {
       padding: 4px 10px;
-      border-radius: var(--radius-full);
-      border: 1px solid rgba(148,163,184,0.3);
-      background: rgba(15,23,42,0.9);
-      color: var(--text-soft);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(8, 17, 40, 0.8);
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
-    .pill-dot {
-      width: 7px;
-      height: 7px;
+    .beta-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34,197,94,0.35);
+      background: #27e5a7;
+      box-shadow: 0 0 12px rgba(39, 229, 167, 0.9);
     }
 
-    .ghost-link {
-      border-radius: var(--radius-full);
-      padding: 6px 11px;
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-soft);
-      font-size: 12px;
-      cursor: default;
-      opacity: 0.6;
-    }
-
-    .cta-top {
-      padding: 7px 14px;
-      border-radius: var(--radius-full);
-      border: 1px solid rgba(96,165,250,0.8);
-      background: radial-gradient(circle at top left,#28a3ff,#2563eb);
-      color: white;
-      font-size: 12px;
+    .pill-primary {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4c7dff, #8f5bff);
+      color: #050816;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 10px 22px rgba(37,99,235,0.65);
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
-                  filter var(--transition-fast);
+      border: none;
     }
 
-    .cta-top span.icon {
-      font-size: 14px;
-    }
+    /* 메인 레이아웃 */
 
-    .cta-top:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-      box-shadow: 0 14px 30px rgba(37,99,235,0.8);
-    }
-
-    /* Layout columns */
-    .layout {
+    .main-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
       gap: 24px;
-      padding: 8px 4px 4px;
-      align-items: center;
+      align-items: stretch;
     }
 
-    @media (max-width: 880px) {
-      .shell {
-        padding: 18px 16px 26px;
-        border-radius: 24px;
-      }
-      .layout {
+    @media (max-width: 900px) {
+      .main-grid {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
-    /* Hero text */
-    .hero-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      border: 1px solid rgba(148,163,184,0.35);
-      background: rgba(15,23,42,0.95);
-      color: var(--text-soft);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
+    /* 왼쪽: 히어로 */
+
+    .hero {
+      background: radial-gradient(circle at top left, #1a2444, #070a16);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 28px 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .hero-label small {
-      padding: 2px 8px;
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at 0 0,
+        rgba(102, 178, 255, 0.25),
+        transparent 60%
+      );
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .hero-badge {
+      padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(37,99,235,0.92);
-      color: #e5e7eb;
-      font-size: 10px;
-      letter-spacing: 0.16em;
+      background: rgba(7, 14, 35, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .hero-title {
-      font-size: clamp(32px, 5vw, 40px);
-      line-height: 1.15;
-      margin: 0 0 10px;
+      font-size: clamp(26px, 4vw, 34px);
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin-bottom: 10px;
     }
 
-    .hero-sub {
-      font-size: 15px;
-      color: var(--primary);
-      margin-bottom: 14px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
+    .hero-highlight {
+      color: #f3f4ff;
+      text-shadow: 0 0 30px rgba(111, 173, 255, 0.9);
     }
 
-    .hero-body {
+    .hero-desc {
       font-size: 14px;
-      color: var(--text-soft);
-      max-width: 420px;
-      margin-bottom: 20px;
-    }
-
-    .hero-body strong {
-      color: #e5e7eb;
-      font-weight: 600;
-    }
-
-    /* CTA row */
-    .hero-ctas {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      line-height: 1.7;
+      color: var(--text-sub);
       margin-bottom: 18px;
     }
 
-    .btn-primary,
-    .btn-secondary {
-      border-radius: var(--radius-full);
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 500;
-      border: 1px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background var(--transition-fast),
-                  transform var(--transition-fast),
-                  box-shadow var(--transition-fast),
-                  border-color var(--transition-fast),
-                  color var(--transition-fast);
-      white-space: nowrap;
+    .hero-desc strong {
+      color: #ffffff;
+      font-weight: 600;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      border-color: rgba(129,140,248,0.9);
-      color: white;
-      box-shadow: 0 14px 34px rgba(37,99,235,0.8);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(37,99,235,0.95);
-      filter: brightness(1.03);
-    }
-
-    .btn-secondary {
-      background: rgba(15,23,42,0.8);
-      border-color: rgba(148,163,184,0.6);
-      color: var(--text-main);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(15,23,42,0.95);
-      transform: translateY(-1px);
-      border-color: rgba(209,213,219,0.9);
-    }
-
-    /* Mini meta row */
-    .meta-row {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      font-size: 11px;
-      color: var(--text-softer);
+      margin-bottom: 12px;
     }
 
-    .meta-chip {
-      padding: 4px 9px;
-      border-radius: var(--radius-full);
-      background: rgba(15,23,42,0.75);
-      border: 1px solid rgba(31,41,55,0.9);
+    .btn-main {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4c7dff, #8f5bff);
+      color: #050816;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(76, 125, 255, 0.5);
+    }
+
+    .btn-sub {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(5, 8, 22, 0.8);
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
-    .meta-dot {
-      width: 6px;
-      height: 6px;
+    .hero-footnote {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    .hero-dot {
+      width: 5px;
+      height: 5px;
       border-radius: 999px;
-      background: #22c55e;
+      background: #3bd0ff;
+      box-shadow: 0 0 10px rgba(59, 208, 255, 0.9);
     }
 
-    /* Right column – cards */
-    .right-col {
-      position: relative;
-    }
+    /* 오른쪽: 실험 카드 컬럼 */
 
-    .orb {
-      position: absolute;
-      inset: -40px -60px auto auto;
-      width: 230px;
-      height: 230px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 30% 20%, #e5e7eb, transparent 55%),
-        radial-gradient(circle at 70% 90%, #4f46e5, transparent 65%),
-        radial-gradient(circle at 10% 100%, #22d3ee, transparent 60%);
-      opacity: 0.14;
-      filter: blur(4px);
-      z-index: 0;
+    .lab-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .panel {
-      position: relative;
-      z-index: 1;
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(148,163,184,0.2);
-      background: radial-gradient(circle at top left, rgba(248,250,252,0.02), transparent 55%),
-                  rgba(15,23,42,0.9);
-      padding: 16px 16px 14px;
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      background: rgba(4, 7, 19, 0.96);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 16px;
     }
 
     .panel-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
       margin-bottom: 10px;
     }
 
     .panel-title {
       font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
+      color: var(--text-sub);
     }
 
-    .panel-badge {
-      font-size: 10px;
-      padding: 4px 8px;
+    .panel-tag {
+      font-size: 11px;
+      padding: 3px 9px;
       border-radius: 999px;
-      background: rgba(37,99,235,0.15);
-      color: var(--primary);
-      border: 1px solid rgba(59,130,246,0.55);
+      background: rgba(17, 23, 49, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .experiment-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .experiment-card {
+      background: radial-gradient(circle at top, #151b34, #070a16);
+      border-radius: var(--radius-md);
+      padding: 12px 12px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .experiment-label {
+      font-size: 10px;
+      color: var(--accent-2);
+      margin-bottom: 4px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    @media (max-width: 640px) {
-      .cards {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .card {
-      border-radius: 16px;
-      padding: 12px 11px 11px;
-      border: 1px solid rgba(31,41,55,0.95);
-      background: radial-gradient(circle at top left, rgba(37,99,235,0.18), transparent 65%),
-                  rgba(15,23,42,0.95);
-      box-shadow: 0 10px 26px rgba(15,23,42,0.9);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .card:nth-child(2) {
-      background: radial-gradient(circle at top left, rgba(236,72,153,0.16), transparent 62%),
-                  rgba(15,23,42,0.96);
-    }
-    .card:nth-child(3) {
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.20), transparent 62%),
-                  rgba(15,23,42,0.96);
-    }
-    .card:nth-child(4) {
-      background: radial-gradient(circle at top left, rgba(251,191,36,0.18), transparent 62%),
-                  rgba(15,23,42,0.96);
-    }
-
-    .card-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--text-softer);
-    }
-
-    .card-title {
+    .experiment-name {
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-main);
+      margin-bottom: 6px;
     }
 
-    .card-body {
+    .experiment-desc {
       font-size: 11px;
-      color: var(--text-soft);
-      line-height: 1.45;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 8px;
     }
 
-    .card-tag-row {
+    .experiment-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 4px;
-    }
-
-    .card-tag {
       font-size: 10px;
-      padding: 3px 7px;
+      color: var(--text-sub);
+    }
+
+    .experiment-pill {
+      padding: 4px 9px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(31,41,55,0.85);
-      color: var(--text-softer);
+      background: rgba(6, 11, 32, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    /* Mini timeline */
-    .timeline {
-      margin-top: 4px;
-      padding-top: 8px;
-      border-top: 1px dashed rgba(55,65,81,0.9);
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
+    /* 푸터 */
 
-    .step {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .step strong {
-      font-size: 11px;
-      color: var(--text-main);
-    }
-
-    /* Footer */
     .footer {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(15,23,42,0.85);
+      font-size: 10px;
+      color: var(--text-sub);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 10px;
-      font-size: 11px;
-      color: var(--text-softer);
+      gap: 8px;
+      margin-top: 4px;
+      padding: 0 4px 4px;
     }
 
-    .footer span.mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 10px;
-      color: var(--text-soft);
+    .footer-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
-    @media (max-width: 640px) {
-      body {
-        padding: 16px 10px 24px;
-      }
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .top-right {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .hero-body {
-        max-width: none;
-      }
-      .footer {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    .footer-right {
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <div class="shell-inner">
-      <!-- 상단 바 -->
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark">F</div>
-          <div>
-            <div class="brand-text-main">FREECOMFORTLAB</div>
-            <div class="brand-text-sub">프리 컨버터 실험실 · 파일 변환 인프라</div>
-          </div>
-        </div>
-        <div class="top-right">
-          <div class="badge-beta">
-            <span class="pill-dot"></span>
-            <span>Private β 준비 중</span>
-          </div>
-          <button class="ghost-link" type="button">로그인 · Soon</button>
-          <a class="cta-top" href="#beta">
-            <span class="icon">⚗️</span>
-            <span>베타 알림 신청</span>
-          </a>
-        </div>
-      </header>
-
-      <!-- 메인 레이아웃 -->
-      <section class="layout">
-        <!-- 왼쪽: 히어로 텍스트 -->
+  <div class="page">
+    <!-- 헤더 -->
+    <header class="header">
+      <div class="logo-wrap">
+        <div class="logo-circle">F</div>
         <div>
-          <div class="hero-label">
-            <small>BETA</small>
-            <span>FILE → COMFORT, COMFORT → MONEY</span>
+          <div class="logo-text-main">FreeComfortLab</div>
+          <div class="logo-text-sub">프리 컨버터 실험실 · 파일 변환 인프라</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="beta-chip">
+          <span class="beta-dot"></span>
+          <span>Private β 준비 중</span>
+        </div>
+        <button class="pill-primary" type="button">
+          베타 알림 신청
+        </button>
+      </div>
+    </header>
+
+    <!-- 메인 섹션 -->
+    <main class="main-grid">
+      <!-- 왼쪽: 히어로 -->
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="hero-badges">
+            <span class="hero-badge">FILE → COMFORT</span>
+            <span class="hero-badge">COMFORT → MONEY</span>
           </div>
-          <h1 class="hero-title">프리 컨버터 실험실</h1>
-          <p class="hero-sub">파일이 편안해지는 순간, 반복 노동은 수익으로 바뀝니다.</p>
-          <p class="hero-body">
+
+          <h1 class="hero-title">
+            <span class="hero-highlight">프리 컨버터 실험실</span><br />
+            파일이 편안해지는 순간,<br />
+            반복 노동은 수익으로 바뀝니다.
+          </h1>
+
+          <p class="hero-desc">
             FreeComfortLab은 유튜브·음원·문서·압축파일 등 흩어져 있는
-            <strong>“귀찮은 파일 작업”을 한 번에 실험·변환·자동화</strong>하는
-            실험실형 웹 서비스입니다. 건축·디자인·크리에이터의
-            백그라운드에서 출발한, 현실 작업자 중심의 워크플로를 연구합니다.
+            <strong>“귀찮은 파일 작업”</strong>을 한 번에 실험·자동화하는
+            소량 실험실형 웹 서비스입니다.<br />
+            건축·디자인·크리에이터의 백그라운드에서 출발한,
+            <strong>현실 작업자 중심 워크플로</strong>를 연구합니다.
           </p>
 
-          <div class="hero-ctas">
-            <a id="beta" href="mailto:hello@freecomfortlab.com?subject=%5BFreeComfortLab%5D%20베타%20관심%20있어요"
-               class="btn-primary">
-              <span>베타 테스트 관심 있어요</span>
-              <span>↗</span>
+          <div class="hero-actions">
+            <!-- convert.html 로 연결 -->
+            <a href="/convert.html">
+              <button class="btn-main" type="button">
+                파일 변환 시작하기
+              </button>
             </a>
-            <a href="#how" class="btn-secondary">
-              <span>어떻게 동작하나요?</span>
-            </a>
+
+            <button class="btn-sub" type="button">
+              실험 노트 구경하기
+            </button>
           </div>
 
-          <div class="meta-row">
-            <div class="meta-chip">
-              <span class="meta-dot"></span>
-              <span>1차 실험: 파일 변환 · 정리 · 태깅 자동화</span>
-            </div>
-            <div class="meta-chip">
-              <span>Made in Seoul · Side-Lab Project</span>
-            </div>
+          <div class="hero-footnote">
+            <span class="hero-dot"></span>
+            <span>1차 실험: 파일 변환 · 정리 · 태깅 자동화</span>
+            <span>·</span>
+            <span>Made in Seoul · Side-Lab Project</span>
           </div>
         </div>
-
-        <!-- 오른쪽: 기능 카드 -->
-        <aside class="right-col">
-          <div class="orb" aria-hidden="true"></div>
-          <div class="panel">
-            <div class="panel-header">
-              <div class="panel-title">지금 연구 중인 실험들</div>
-              <div class="panel-badge">Lab Notes</div>
-            </div>
-            <div class="cards">
-              <article class="card">
-                <div class="card-label">EXPERIMENT 01</div>
-                <div class="card-title">YouTube · 음원 · 파일 변환</div>
-                <p class="card-body">
-                  웹에서 복붙한 링크와 파일을 한 큐에 모아서
-                  <strong>MP3 · WAV · MP4 · 썸네일</strong> 등으로
-                  묶음 변환. 폴더 구조까지 자동으로 잡아주는 것이 목표입니다.
-                </p>
-                <div class="card-tag-row">
-                  <span class="card-tag">멀티 링크 큐</span>
-                  <span class="card-tag">품질 프리셋</span>
-                </div>
-              </article>
-
-              <article class="card">
-                <div class="card-label">EXPERIMENT 02</div>
-                <div class="card-title">자동 정리 &amp; 태깅</div>
-                <p class="card-body">
-                  파일명·메타데이터·자막·가사 등을 읽어
-                  <strong>프로젝트·클라이언트·날짜·태그</strong> 기준으로
-                  다시 분류하는 실험. “파일 찾기” 시간을 줄이는 게 목표입니다.
-                </p>
-                <div class="card-tag-row">
-                  <span class="card-tag">프로젝트 묶음</span>
-                  <span class="card-tag">스마트 폴더</span>
-                </div>
-              </article>
-
-              <article class="card">
-                <div class="card-label">EXPERIMENT 03</div>
-                <div class="card-title">반복 작업 스크립트</div>
-                <p class="card-body">
-                  매번 똑같이 눌러야 했던 클릭들을
-                  <strong>“레시피(Recipe)”</strong>로 저장해서
-                  버튼 한 번으로 실행하는 실험. 노가다를 코드로 캡슐화합니다.
-                </p>
-                <div class="card-tag-row">
-                  <span class="card-tag">작업 프로필</span>
-                  <span class="card-tag">원클릭 재실행</span>
-                </div>
-              </article>
-
-              <article class="card">
-                <div class="card-label">EXPERIMENT 04</div>
-                <div class="card-title">Comfort → Money</div>
-                <p class="card-body">
-                  정리된 파일과 작업 레시피를 바탕으로,
-                  <strong>템플릿 스토어 · 미니 툴 판매</strong> 같은
-                  수익화 옵션도 실험 예정입니다.
-                </p>
-                <div class="card-tag-row">
-                  <span class="card-tag">크리에이터</span>
-                  <span class="card-tag">1인 스튜디오</span>
-                </div>
-              </article>
-            </div>
-
-            <div id="how" class="timeline">
-              <div class="step">
-                <strong>1 · 파일/링크 투입</strong><br>
-                브라우저에서 드래그&드롭 또는 복붙으로
-                소재를 한 번에 수집합니다.
-              </div>
-              <div class="step">
-                <strong>2 · 실험 레시피 선택</strong><br>
-                변환·정리·태깅 레시피를 고르거나 직접 조합합니다.
-              </div>
-              <div class="step">
-                <strong>3 · 결과 수확</strong><br>
-                정리된 폴더+파일을 다운로드하거나
-                다른 앱으로 바로 넘깁니다.
-              </div>
-            </div>
-          </div>
-        </aside>
       </section>
 
-      <!-- 푸터 -->
-      <footer class="footer">
-        <div>
-          © 2025 <strong>Le Deuxions</strong> · FreeComfortLab Infrastructure Beta  
-          <span class="mono">v0.1 “Comfort Seed”</span>
+      <!-- 오른쪽: 실험 카드 -->
+      <aside class="lab-column">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">지금 연구 중인 실험들</div>
+            <div class="panel-tag">LAB NOTES</div>
+          </div>
+
+          <div class="experiment-list">
+            <article class="experiment-card">
+              <div class="experiment-label">experiment 01</div>
+              <div class="experiment-name">YouTube · 음원 · 파일 변환</div>
+              <p class="experiment-desc">
+                웹에서 복잡한 링크와 파일을 긁어 모아서 MP3 · WAV · MP4 · 썸네일
+                등으로 한 번에 정리·변환하는 실험입니다. “링크만 붙여넣으면 끝”
+                을 목표로 연구 중입니다.
+              </p>
+              <div class="experiment-meta">
+                <span class="experiment-pill">웹 링크 큐</span>
+                <span class="experiment-pill">품질 프리셋</span>
+              </div>
+            </article>
+
+            <article class="experiment-card">
+              <div class="experiment-label">experiment 02</div>
+              <div class="experiment-name">자동 정리 & 태깅</div>
+              <p class="experiment-desc">
+                파일명·메타데이터·작업자가 붙여둔 키워드를 조합해, 디스크 안의
+                폴더를 다시 분류하는 실험입니다. “찾느라 쓰는 시간 줄이기”가
+                첫 목표입니다.
+              </p>
+              <div class="experiment-meta">
+                <span class="experiment-pill">프로젝트 폴더</span>
+                <span class="experiment-pill">스마트 폴더</span>
+              </div>
+            </article>
+
+            <article class="experiment-card">
+              <div class="experiment-label">experiment 03</div>
+              <div class="experiment-name">반복 작업 스크립트</div>
+              <p class="experiment-desc">
+                매번 똑같이 늘어지는 작은 클릭들을 “레시피(Recipe)”로 저장해서
+                버튼 한 번에 실행하는 실험입니다. 노가다를 코드로 압축합니다.
+              </p>
+              <div class="experiment-meta">
+                <span class="experiment-pill">작업 로그 기록</span>
+                <span class="experiment-pill">원클릭 재실행</span>
+              </div>
+            </article>
+
+            <article class="experiment-card">
+              <div class="experiment-label">experiment 04</div>
+              <div class="experiment-name">Comfort → Money</div>
+              <p class="experiment-desc">
+                정리된 파일과 작업 레시피를 바탕으로, 템플릿 스토어 · 미니 도구
+                앱 등 수익화 실험도 함께 준비하고 있습니다.
+              </p>
+              <div class="experiment-meta">
+                <span class="experiment-pill">크리에이터</span>
+                <span class="experiment-pill">1인 스튜디오</span>
+              </div>
+            </article>
+          </div>
         </div>
-        <div>
-          이 페이지는 현재 <span class="mono">Cloudflare Pages + FreeComfortLab Lab Server</span> 위에서
-          조용히 실험 중입니다. 조금씩, 하지만 꾸준히 진화할 예정입니다.
-        </div>
-      </footer>
-    </div>
-  </main>
+      </aside>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+      <div class="footer-left">
+        <span>© 2025 Le Deuxions · FreeComfortLab Infrastructure Beta v0.1</span>
+        <span>·</span>
+        <span>“Comfort Seed”</span>
+      </div>
+      <div class="footer-right">
+        현재 이미지는 Cloudflare Pages + FreeComfortLab lab server 위에서 조용히 실험 중입니다.
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
