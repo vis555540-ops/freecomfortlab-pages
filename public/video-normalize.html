@@ -2,20 +2,20 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>영상 / 음성 노멀라이즈 실험실 – FreeComfortLab</title>
+  <title>오디오 / 카카오톡 영상 변환 – FreeComfortLab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="영상과 음성 파일의 음량을 일정하게 맞춰주는 노멀라이즈 실험 페이지입니다. mp4, mkv, mov, mp3, wav 파일을 업로드하면 자동으로 처리합니다.">
+  <meta name="description" content="오디오는 mp3로, 카카오톡 영상은 보기 편한 mp4로 정리해 주는 실험실입니다.">
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
+      background: #020617;
       color: #e5e7eb;
       margin: 0;
       padding: 0;
     }
     header {
       padding: 16px 24px;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -29,8 +29,62 @@
     header a:hover {
       opacity: 1;
     }
+    .mode-label {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-right: 8px;
+    }
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .switch-label {
+      font-size: 11px;
+      color: #9ca3af;
+      transition: color .12s ease-out;
+    }
+    .switch-label.active-audio {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .switch-label.active-video {
+      color: #facc15;
+      font-weight: 600;
+    }
+    .switch-btn {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: #020617;
+      cursor: pointer;
+      padding: 0;
+      outline: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background .12s ease-out, border-color .12s ease-out;
+    }
+    .switch-knob {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      margin-left: 2px;
+      transition: transform .12s ease-out, background .12s ease-out;
+    }
+    body.mode-video .switch-btn {
+      background: #facc15;
+      border-color: #facc15;
+    }
+    body.mode-video .switch-knob {
+      transform: translateX(18px);
+      background: #111827;
+    }
+
     .container {
-      max-width: 720px;
+      max-width: 800px;
       margin: 32px auto;
       padding: 0 16px 48px;
     }
@@ -38,18 +92,38 @@
       font-size: 24px;
       margin-bottom: 8px;
     }
-    p.desc {
+    .subtitle {
       font-size: 14px;
       color: #9ca3af;
+      margin-bottom: 20px;
       line-height: 1.5;
-      margin-bottom: 24px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    .pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
     }
     .card {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%),
+                  radial-gradient(circle at top right, rgba(250,204,21,0.18), transparent 55%),
+                  #020617;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
       padding: 20px 20px 24px;
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
     }
     .field {
       margin-bottom: 16px;
@@ -64,46 +138,49 @@
       width: 100%;
       padding: 10px;
       border-radius: 10px;
-      border: 1px dashed rgba(148, 163, 184, 0.8);
-      background: rgba(15, 23, 42, 0.7);
+      border: 1px dashed rgba(148, 163, 184, 0.85);
+      background: rgba(15, 23, 42, 0.9);
       color: #e5e7eb;
       font-size: 13px;
     }
-    .mode-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 8px;
+    .hint {
+      font-size: 11px;
+      color: #9ca3af;
+      line-height: 1.5;
     }
-    select {
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: #020617;
+    .hint strong {
       color: #e5e7eb;
-      font-size: 13px;
     }
-    button {
+    button.action {
+      margin-top: 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
       font-size: 14px;
       font-weight: 500;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #022c22;
-      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35);
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #0b1120;
+      box-shadow: 0 12px 35px rgba(56,189,248,0.45);
       transition: transform .08s ease-out, box-shadow .08s ease-out, opacity .08s;
     }
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(34, 197, 94, 0.45);
+    body.mode-video button.action {
+      background: linear-gradient(135deg, #facc15, #eab308);
+      box-shadow: 0 12px 35px rgba(250,204,21,0.5);
+      color: #1f2937;
     }
-    button:disabled {
+    button.action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(56,189,248,0.6);
+    }
+    body.mode-video button.action:hover {
+      box-shadow: 0 18px 45px rgba(250,204,21,0.7);
+    }
+    button.action:disabled {
       opacity: 0.5;
       cursor: default;
       transform: none;
@@ -116,15 +193,15 @@
       font-size: 12px;
       line-height: 1.6;
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.55);
       white-space: pre-wrap;
       word-break: break-all;
     }
     .status-box.ok {
-      border-color: rgba(52, 211, 153, 0.8);
+      border-color: rgba(52, 211, 153, 0.85);
     }
     .status-box.err {
-      border-color: rgba(248, 113, 113, 0.8);
+      border-color: rgba(248, 113, 113, 0.9);
     }
     .download-link {
       margin-top: 16px;
@@ -137,54 +214,51 @@
     .download-link a:hover {
       text-decoration: underline;
     }
-    small {
-      font-size: 11px;
-      color: #9ca3af;
-    }
   </style>
 </head>
-<body>
+<body class="mode-audio">
   <header>
     <a href="/">&larr; FreeComfortLab 메인으로</a>
-    <span style="font-size:12px; color:#9ca3af;">영상/음성 노멀라이즈 실험</span>
+    <div class="mode-toggle">
+      <span id="labelAudio" class="switch-label active-audio">오디오 변환</span>
+      <button id="modeSwitch" class="switch-btn" type="button" aria-label="모드 전환">
+        <div class="switch-knob"></div>
+      </button>
+      <span id="labelVideo" class="switch-label">카카오톡 영상 변환</span>
+    </div>
   </header>
 
   <div class="container">
-    <h1>영상 / 음성 노멀라이즈 실험실</h1>
-    <p class="desc">
-      mp4 / mkv / mov / mp3 / wav 파일을 업로드하면,<br>
-      ffmpeg의 <code>loudnorm</code> 필터를 사용해서 음량을 일정하게 맞춰주는 실험용 도구입니다.<br>
-      아직은 테스트 단계라, 중요한 파일은 백업 후 사용해 주세요.
+    <div class="pill">
+      <span class="dot"></span>
+      <span id="pillText">현재: 오디오 → mp3 변환 모드</span>
+    </div>
+
+    <h1 id="titleText">오디오 / 카카오톡 영상 변환 실험실</h1>
+    <p class="subtitle" id="descText">
+      위 스위치로 모드를 바꿀 수 있습니다.<br>
+      기본은 <strong>오디오 파일을 mp3로 변환</strong>하는 모드이며,<br>
+      스위치를 오른쪽으로 켜면 <strong>카카오톡으로 받은 영상 정리용 모드</strong>로 바뀝니다.
     </p>
 
     <div class="card">
       <div class="field">
-        <label for="fileInput">파일 선택</label>
-        <input id="fileInput" type="file" accept="video/*,audio/*">
+        <label for="fileInput" id="fileLabel">파일 선택 (오디오 파일)</label>
+        <input id="fileInput" type="file" accept="audio/*">
+      </div>
+      <div class="field">
+        <p class="hint" id="hintText">
+          • 오디오 모드: 녹음, mp4에서 추출한 음원 등 대부분의 음성 파일을 <strong>mp3</strong>로 변환합니다.<br>
+          • 변환된 mp3는 다운로드 받아서 보관/편집에 사용할 수 있습니다.
+        </p>
       </div>
 
-      <div class="field">
-        <label>모드 선택</label>
-        <div class="mode-row">
-          <select id="modeSelect">
-            <option value="video">영상 유지 + 오디오 노멀라이즈 (mp4)</option>
-            <option value="audio">오디오만 추출 + 노멀라이즈 (mp3)</option>
-          </select>
-        </div>
-        <small>
-          • 영상 모드: 기존 비디오는 그대로 두고 오디오만 정규화한 mp4 반환<br>
-          • 오디오 모드: 오디오만 추출하여 정규화된 mp3 파일로 반환
-        </small>
-      </div>
-
-      <div class="field">
-        <button id="runBtn">
-          <span id="btnLabel">노멀라이즈 시작</span>
-        </button>
-      </div>
+      <button id="runBtn" class="action" type="button">
+        <span id="btnText">오디오 mp3로 변환 시작</span>
+      </button>
 
       <div id="statusBox" class="status-box">
-        아직 요청 전입니다. 파일을 선택하고 "노멀라이즈 시작" 버튼을 눌러 주세요.
+        아직 요청 전입니다. 파일을 선택하고 버튼을 눌러 주세요.
       </div>
 
       <div id="downloadArea" class="download-link" style="display:none;"></div>
@@ -192,12 +266,22 @@
   </div>
 
   <script>
+    const body = document.body;
+    const modeSwitch = document.getElementById("modeSwitch");
+    const labelAudio = document.getElementById("labelAudio");
+    const labelVideo = document.getElementById("labelVideo");
+    const pillText = document.getElementById("pillText");
+    const titleText = document.getElementById("titleText");
+    const descText = document.getElementById("descText");
+    const fileLabel = document.getElementById("fileLabel");
     const fileInput = document.getElementById("fileInput");
-    const modeSelect = document.getElementById("modeSelect");
+    const hintText = document.getElementById("hintText");
     const runBtn = document.getElementById("runBtn");
-    const btnLabel = document.getElementById("btnLabel");
+    const btnText = document.getElementById("btnText");
     const statusBox = document.getElementById("statusBox");
     const downloadArea = document.getElementById("downloadArea");
+
+    let currentMode = "audio"; // "audio" | "video"
 
     function setStatus(message, type) {
       statusBox.textContent = message;
@@ -206,9 +290,63 @@
       if (type === "err") statusBox.classList.add("err");
     }
 
-    async function handleNormalize() {
+    function updateModeUI() {
+      if (currentMode === "audio") {
+        body.classList.remove("mode-video");
+        body.classList.add("mode-audio");
+
+        labelAudio.classList.add("active-audio");
+        labelVideo.classList.remove("active-video");
+
+        pillText.textContent = "현재: 오디오 → mp3 변환 모드";
+        titleText.textContent = "오디오 변환 실험실";
+        descText.innerHTML =
+          "녹음 파일, 음성 추출 파일 등을 <strong>mp3</strong>로 정리하는 실험 모드입니다.<br>" +
+          "카카오톡 영상이 아니라, 순수 오디오 위주로 정리할 때 사용해 주세요.";
+
+        fileLabel.textContent = "파일 선택 (오디오 파일)";
+        fileInput.accept = "audio/*";
+
+        hintText.innerHTML =
+          "• mp3, wav, m4a, mp4의 오디오 등 대부분의 음성 파일을 mp3로 변환합니다.<br>" +
+          "• 결과 파일은 mp3 형식으로 다운로드됩니다.";
+
+        btnText.textContent = "오디오 mp3로 변환 시작";
+      } else {
+        body.classList.remove("mode-audio");
+        body.classList.add("mode-video");
+
+        labelAudio.classList.remove("active-audio");
+        labelVideo.classList.add("active-video");
+
+        pillText.textContent = "현재: 카카오톡 영상 변환 모드";
+        titleText.textContent = "카카오톡 영상 정리 실험실";
+        descText.innerHTML =
+          "카카오톡으로 받은 세로 영상, 가로 영상 등을 <strong>보기 편한 mp4</strong>로 정리하는 모드입니다.<br>" +
+          "음량도 함께 맞춰서, 볼 때마다 볼륨 조절할 필요를 줄여줍니다.";
+
+        fileLabel.textContent = "파일 선택 (카카오톡 영상 파일)";
+        fileInput.accept = "video/*";
+
+        hintText.innerHTML =
+          "• mp4, mkv, mov 등 대부분의 영상 파일을 입력할 수 있습니다.<br>" +
+          "• 결과 파일은 mp4 형식으로 다운로드되며, 음량은 loudnorm으로 자동 정규화합니다.";
+
+        btnText.textContent = "카카오톡 영상 변환 시작";
+      }
+
+      downloadArea.style.display = "none";
+      downloadArea.innerHTML = "";
+      setStatus("파일을 선택한 뒤 버튼을 눌러 주세요.", null);
+    }
+
+    modeSwitch.addEventListener("click", () => {
+      currentMode = currentMode === "audio" ? "video" : "audio";
+      updateModeUI();
+    });
+
+    async function handleRun() {
       const file = fileInput.files[0];
-      const mode = modeSelect.value;
 
       if (!file) {
         setStatus("먼저 업로드할 파일을 선택해 주세요.", "err");
@@ -216,17 +354,24 @@
       }
 
       runBtn.disabled = true;
-      btnLabel.textContent = "처리 중...";
-      setStatus("서버로 파일을 전송하고 있습니다...\n이 작업은 파일 크기에 따라 시간이 걸릴 수 있습니다.", null);
+      setStatus("서버로 파일을 전송하고 있습니다...\n파일 크기에 따라 시간이 걸릴 수 있습니다.", null);
       downloadArea.style.display = "none";
       downloadArea.innerHTML = "";
 
       try {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("mode", mode);
 
-        const res = await fetch("/api/video-normalize", {
+        let endpoint = "";
+        if (currentMode === "audio") {
+          endpoint = "/api/convert";
+          formData.append("format", "mp3");
+        } else {
+          endpoint = "/api/video-normalize";
+          formData.append("mode", "video");
+        }
+
+        const res = await fetch(endpoint, {
           method: "POST",
           body: formData,
         });
@@ -251,7 +396,7 @@
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
 
-        let filename = "normalized_output";
+        let filename = currentMode === "audio" ? "audio_normalized.mp3" : "video_normalized.mp4";
         const dispo = res.headers.get("Content-Disposition") || "";
         const match = dispo.match(/filename="?([^"]+)"?/);
         if (match && match[1]) {
@@ -269,11 +414,13 @@
         setStatus("요청 처리 중 알 수 없는 오류가 발생했습니다.\n" + err, "err");
       } finally {
         runBtn.disabled = false;
-        btnLabel.textContent = "노멀라이즈 시작";
       }
     }
 
-    runBtn.addEventListener("click", handleNormalize);
+    runBtn.addEventListener("click", handleRun);
+
+    // 초기 UI 세팅
+    updateModeUI();
   </script>
 </body>
 </html>
