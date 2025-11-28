@@ -234,6 +234,7 @@
         const contentType = res.headers.get("Content-Type") || "";
 
         if (!res.ok) {
+          // 에러일 경우 JSON일 확률 높음
           let msg = `HTTP ${res.status}`;
           try {
             if (contentType.includes("application/json")) {
@@ -243,14 +244,18 @@
               const text = await res.text();
               msg += `\n${text}`;
             }
-          } catch (e) {}
+          } catch (e) {
+            // 무시
+          }
           setStatus("요청 실행 중 오류가 발생했습니다.\n\n" + msg, "err");
           return;
         }
 
+        // 성공일 경우: 바이너리(blob) 응답으로 파일 내려줌
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
 
+        // 파일명 추출
         let filename = "normalized_output";
         const dispo = res.headers.get("Content-Disposition") || "";
         const match = dispo.match(/filename="?([^"]+)"?/);
